@@ -16,10 +16,26 @@ const backgroundBonus: Record<
   street_cast: { visuals: 1 },
 };
 
+const backgroundStory: Record<string, string> = {
+  dance_ace: "You trained as a dance ace since childhood.",
+  local_visual: "You became famous for your visuals in your local area.",
+  talent_show_winner: "You won a national talent show.",
+  mixed_heritage: "Your unique heritage made you stand out.",
+  street_cast: "You were cast on the street by a scout.",
+};
+
+const dayEvent: Record<number, string> = {
+  3: "You passed your first evaluation.",
+  5: "You gained your first small fanbase!",
+  7: "A trainee video went viral.",
+};
+
 function GameScreen({ background }: GameScreenProps) {
   const bonus = background ? backgroundBonus[background] ?? {} : {};
+  const story = background ? backgroundStory[background] : "";
   const [idolName, setIdolName] = useState("");
   const [day, setDay] = useState(1);
+  const [actionUsed, setActionUsed] = useState(false);
 
   const [singing, setSinging] = useState(() => bonus.singing ?? 0);
   const [dancing, setDancing] = useState(() => bonus.dancing ?? 0);
@@ -27,12 +43,16 @@ function GameScreen({ background }: GameScreenProps) {
 
   function handleDayPass() {
     setDay((d) => d + 1);
+    setActionUsed(false);
   }
 
   return (
     <div>
       <h1>Create your own KPOP idol star</h1>
       <p>Background: {background}</p>
+      <p>{story}</p>
+      {dayEvent[day] && <p>{dayEvent[day]}</p>}
+      {actionUsed && <p>You already trained today.</p>}
       <label>
         Idol name:
         <input value={idolName} onChange={(e) => setIdolName(e.target.value)} />
@@ -42,17 +62,29 @@ function GameScreen({ background }: GameScreenProps) {
       <Stat
         name="Singing"
         value={singing}
-        onIncrease={() => setSinging((v) => v + 1)}
+        onIncrease={() => {
+          if (actionUsed) return;
+          setSinging((v) => v + 1);
+          setActionUsed(true);
+        }}
       />
       <Stat
         name="Dancing"
         value={dancing}
-        onIncrease={() => setDancing((v) => v + 1)}
+        onIncrease={() => {
+          if (actionUsed) return;
+          setDancing((v) => v + 1);
+          setActionUsed(true);
+        }}
       />
       <Stat
         name="Visuals"
         value={visuals}
-        onIncrease={() => setVisuals((v) => v + 1)}
+        onIncrease={() => {
+          if (actionUsed) return;
+          setVisuals((v) => v + 1);
+          setActionUsed(true);
+        }}
       />
 
       <button onClick={handleDayPass}>Spend a day</button>

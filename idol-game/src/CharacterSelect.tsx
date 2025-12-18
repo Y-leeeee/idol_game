@@ -14,7 +14,7 @@ function CharacterSelect({ onSelect }: CharacterSelectProps) {
 
       <button onClick={() => onSelect("dance_ace")}>School dance ace</button>
 
-      <button onClick={() => onSelect("talend_show_winner")}>
+      <button onClick={() => onSelect("talent_show_winner")}>
         Talant show winner
       </button>
 
